@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import escapeRegExp from 'escape-string-regexp';
+import { Route, Link } from 'react-router-dom';
 
 import Book from '../shared/Book';
 import SearchBook from './SearchBook';
@@ -47,7 +48,9 @@ class ListBooks extends Component {
         return (
             <div className="list-books">
                 <div className="search-books">
-                    <SearchBook query={query} updateQuery={this.updateQuery} />
+                    <Route path="/search" render={() => (
+                        <SearchBook query={query} updateQuery={this.updateQuery} />
+                    )} />
                 </div>
                 <div className="list-books-title">
                     <h1>MyReads</h1>
@@ -68,6 +71,9 @@ class ListBooks extends Component {
                             </div>
                         </div> 
                     ))}
+                </div>
+                <div className="open-search">
+                  <Link to="/search">Add a book</Link>
                 </div>
             </div>  
         )
