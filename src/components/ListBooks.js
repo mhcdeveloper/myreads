@@ -58,7 +58,7 @@ class ListBooks extends Component {
                             <h2 className="bookshelf-title">{shelf}</h2>
                             <div className="bookshelf-books">
                                 <ol className="books-grid">
-                                    {showingBooks.filter(book => book.shelf === 'currentlyReading')
+                                    {showingBooks.filter((book, shelf) => book.shelf.toLowerCase() === shelf.replace( /\s/g, '' ).toLowerCase())
                                         .map((book) => 
                                             <li key={book.id}>
                                                 <Book book={book} />
