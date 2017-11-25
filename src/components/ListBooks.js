@@ -13,18 +13,20 @@ class ListBooks extends Component {
         this.state = {
             shelf: [
                 "Currently Reading",
-                "Want to Reading",
+                "Want To Read",
                 "Read"
             ],
             query: ''
         }
     }
 
+    //Metodo responsavel por atualizar a query do filtro
     updateQuery = (query) => {
         this.setState({ query: query.trim() });
         console.log(query);
     }
 
+    //Metodo responsavel por limpar a query do filtro
     clearQuery = () => {
         this.setState({ query: '' });
     }
@@ -32,8 +34,9 @@ class ListBooks extends Component {
     static propTypes = {
         books: PropTypes.array.isRequired
     }
+    
     render() {
-        const { books } = this.props; 
+        const { books, updateShelf } = this.props; 
         const { query } = this.state;
 
         let showingBooks;
@@ -61,10 +64,10 @@ class ListBooks extends Component {
                             <h2 className="bookshelf-title">{shelf}</h2>
                             <div className="bookshelf-books">
                                 <ol className="books-grid">
-                                    {showingBooks.filter((book, shelf) => book.shelf.toLowerCase() === shelf.replace( /\s/g, '' ).toLowerCase())
+                                    {showingBooks.filter(book => book.shelf.toLowerCase() === {shelf}.shelf.replace( /\s/g, '' ).toLowerCase())
                                         .map((book) => 
                                             <li key={book.id}>
-                                                <Book book={book} />
+                                                <Book book={book} updateShelf={updateShelf} />
                                             </li>
                                         )}
                                 </ol>
