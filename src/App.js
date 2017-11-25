@@ -17,8 +17,11 @@ class BooksApp extends React.Component {
   }
 
   //Metodo responsável por atualizar o shelf do book
-  updateShelf = (book) => {
-    console.log(this.state.books.indexOf(book));
+  updateShelf = (book, shelf) => {
+    BooksAPI.update(book, shelf).then((res) => {
+      //this.setState({ books });
+      console.log(res);
+    })
   }
 
   render() {
