@@ -10,7 +10,7 @@ class BooksApp extends React.Component {
     books: []
   }
 
-  componentWillMount() {
+  componentDidMount() {
     BooksAPI.getAll().then((books) => {
       this.setState({ books });
     });
@@ -18,9 +18,9 @@ class BooksApp extends React.Component {
 
   //Metodo responsável por atualizar o shelf do book
   updateShelf = (book, shelf) => {
-    BooksAPI.update(book, shelf).then((res) => {
-      //this.setState({ books });
-      console.log(res);
+    BooksAPI.update(book, shelf).then((books) => {
+      this.setState((state) => ({ ...books }));
+      console.log(this.state.books);
     })
   }
 

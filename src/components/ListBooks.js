@@ -23,7 +23,6 @@ class ListBooks extends Component {
     //Metodo responsavel por atualizar a query do filtro
     updateQuery = (query) => {
         this.setState({ query: query.trim() });
-        console.log(query);
     }
 
     //Metodo responsavel por limpar a query do filtro
