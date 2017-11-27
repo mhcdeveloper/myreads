@@ -1,26 +1,43 @@
-import React from 'react'
+import React, { Component } from 'react'
 import * as BooksAPI from './BooksAPI'
 import './App.css'
 import { Route } from 'react-router-dom';
 
 import ListBooks from './components/ListBooks';
 
-class BooksApp extends React.Component {
-  state = {
-    books: []
+class BooksApp extends Component {
+  constructor(props) {
+    super(props);
+
+    this.state = {
+      books: []
+    };
+
+    this.updateShelf = this.updateShelf.bind(this); 
   }
 
-  componentDidMount() {
+  //Metodo responsável por setar o shelf do book retornado da api na state shelf do select
+  componentWillMount() {
+    this.getAllBooks();
+  }
+
+  //Metodo responsável por buscar todos os books na api
+  getAllBooks = () => {
     BooksAPI.getAll().then((books) => {
       this.setState({ books });
     });
   }
 
+  //Metodo responsável por setar os books no localStorage
+  updateLocalStorage = (books) => {
+    window.localStorage.setItem('myReadsBooks', JSON.stringify(books));
+  }
+
   //Metodo responsável por atualizar o shelf do book
+  //O retorno do metodo update é um conjunto de array, porem dei um setState com o spread dos arrays retornados
   updateShelf = (book, shelf) => {
     BooksAPI.update(book, shelf).then((books) => {
-      this.setState((state) => ({ ...books }));
-      console.log(this.state.books);
+      this.getAllBooks();
     })
   }
 
