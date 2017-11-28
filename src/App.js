@@ -23,8 +23,9 @@ class BooksApp extends Component {
 
   //Metodo responsável por buscar todos os books na api
   getAllBooks = () => {
+    this.setState({ loading: true });
     BooksAPI.getAll().then((books) => {
-      this.setState({ books });
+      this.setState({ books, loading: false });
     });
   }
 
@@ -36,6 +37,7 @@ class BooksApp extends Component {
   //Metodo responsável por atualizar o shelf do book
   //O retorno do metodo update é um conjunto de array, porem dei um setState com o spread dos arrays retornados
   updateShelf = (book, shelf) => {
+    this.setState({ loading: true });
     BooksAPI.update(book, shelf).then((books) => {
       this.getAllBooks();
     })
@@ -45,7 +47,11 @@ class BooksApp extends Component {
     return (
       <div className="app">
         <Route path="/" render={() => (
-          <ListBooks books={this.state.books} updateShelf={this.updateShelf} />
+          <ListBooks 
+            books={this.state.books} 
+            updateShelf={this.updateShelf}
+            loading={this.state.loading} 
+          />
         )} />
       </div>
     )

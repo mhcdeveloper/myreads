@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import escapeRegExp from 'escape-string-regexp';
 import { Route, Link } from 'react-router-dom';
+import Loader from 'halogen/PulseLoader'
 
 import Book from '../shared/Book';
 import SearchBook from './SearchBook';
@@ -31,33 +32,20 @@ class ListBooks extends Component {
     }
 
     static propTypes = {
-        books: PropTypes.array.isRequired
+        books: PropTypes.array.isRequired,
+        updateShelf: PropTypes.func.isRequired
     }
-    
-    render() {
-        const { books, updateShelf } = this.props; 
-        const { query } = this.state;
 
-        let showingBooks;
-
-        if (query) {
-            const match = new RegExp(escapeRegExp(query), 'i');
-            showingBooks = books.filter((book) => match.test(book.authors));
+    renderLoader = (loading, showingBooks, updateShelf) => {
+        if (loading) {
+            return (
+                <div className="loading">
+                    <Loader color="#1976D2" size="16px" margin="4px"/>
+                </div>
+            );
         } else {
-            showingBooks = books;
-        }
-
-        return (
-            <div className="list-books">
-                <div className="search-books">
-                    <Route path="/search" render={() => (
-                        <SearchBook query={query} updateQuery={this.updateQuery} />
-                    )} />
-                </div>
-                <div className="list-books-title">
-                    <h1>MyReads</h1>
-                </div>
-                <div className="list-books-content">
+            return (
+                <div>
                     {this.state.shelf.map(shelf => (
                         <div className="bookshelf" key={shelf}>
                             <h2 className="bookshelf-title">{shelf}</h2>
@@ -73,6 +61,38 @@ class ListBooks extends Component {
                             </div>
                         </div> 
                     ))}
+                </div>
+            );
+        }
+    }
+    
+    
+    render() {
+        const { books, updateShelf, loading } = this.props; 
+        const { query } = this.state;
+
+        let showingBooks;
+
+        if (query) {
+            const match = new RegExp(escapeRegExp(query), 'i');
+            showingBooks = books.filter((book) => match.test(book.authors));
+        } else {
+            showingBooks = books;
+        }
+
+        return (
+            <div className="list-books">
+                <div className="search-books">
+                    <Route path="/search" exact render={() => (
+                        <SearchBook query={query} updateQuery={this.updateQuery} />
+                    )} />
+                </div>
+                <div className="list-books-title">
+                    <h1>MyReads</h1>
+                </div>
+                <div className="list-books-content">
+                    {this.renderLoader(loading, showingBooks, updateShelf)}
+                    
                 </div>
                 <div className="open-search">
                   <Link to="/search">Add a book</Link>
