@@ -1,6 +1,6 @@
-import React, { Component } from 'react'
-import * as BooksAPI from './BooksAPI'
-import './App.css'
+import React, { Component } from 'react';
+import * as BooksAPI from './BooksAPI';
+import './App.css';
 import { Route } from 'react-router-dom';
 
 import ListBooks from './components/ListBooks';
@@ -21,11 +21,16 @@ class BooksApp extends Component {
     this.getAllBooks();
   }
 
-  //Metodo responsável por buscar todos os books na api
+  //Metodo responsável por buscar todos os books na api caso ocorra algum error na api ele seta os books setados no localStorage
   getAllBooks = () => {
     this.setState({ loading: true });
     BooksAPI.getAll().then((books) => {
       this.setState({ books, loading: false });
+      this.updateLocalStorage(books);
+    })
+    .catch(() => {
+      const bookList = window.localStorage.getItem('myReadsBooks') || '[]';
+      this.setState({ books: JSON.parse(bookList) });
     });
   }
 

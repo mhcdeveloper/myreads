@@ -15,7 +15,8 @@ class ListBooks extends Component {
             shelf: [
                 "Currently Reading",
                 "Want To Read",
-                "Read"
+                "Read",
+                "None"
             ],
             query: ''
         }
@@ -31,11 +32,7 @@ class ListBooks extends Component {
         this.setState({ query: '' });
     }
 
-    static propTypes = {
-        books: PropTypes.array.isRequired,
-        updateShelf: PropTypes.func.isRequired
-    }
-
+    //Metodo responsável por renderizar o loading ou a lista de books
     renderLoader = (loading, showingBooks, updateShelf) => {
         if (loading) {
             return (
@@ -65,7 +62,11 @@ class ListBooks extends Component {
             );
         }
     }
-    
+
+    static propTypes = {
+        books: PropTypes.array.isRequired,
+        updateShelf: PropTypes.func.isRequired
+    }
     
     render() {
         const { books, updateShelf, loading } = this.props; 
@@ -91,8 +92,7 @@ class ListBooks extends Component {
                     <h1>MyReads</h1>
                 </div>
                 <div className="list-books-content">
-                    {this.renderLoader(loading, showingBooks, updateShelf)}
-                    
+                    {this.renderLoader(loading, showingBooks, updateShelf)}               
                 </div>
                 <div className="open-search">
                   <Link to="/search">Add a book</Link>
