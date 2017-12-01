@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import { Link } from 'react-router-dom';
 
 import Dialog from 'material-ui/Dialog';
 import FlatButton from 'material-ui/FlatButton';
@@ -12,18 +13,15 @@ class DialogSuccess extends Component {
         }
     }
 
-    handleClose = () => {
-        console.log('tes');
-    }
-
     render() {
         const { open } = this.props;
         const actions = [
-            <FlatButton 
-                label="Ok"
-                primary
-                onClick={this.handleClose}
-            />
+            <Link to='/'>
+                <FlatButton 
+                    label="Ok"
+                    primary
+                />
+            </Link>
         ]
         return (
             <div>
