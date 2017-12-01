@@ -15,8 +15,7 @@ class ListBooks extends Component {
             shelf: [
                 "Currently Reading",
                 "Want To Read",
-                "Read",
-                "None"
+                "Read"
             ],
             query: ''
         }
@@ -84,18 +83,15 @@ class ListBooks extends Component {
         return (
             <div className="list-books">
                 <div className="search-books">
-                    <Route path="/search" exact render={() => (
+                    <Route path="/search" render={() => (
                         <SearchBook query={query} updateQuery={this.updateQuery} />
                     )} />
-                </div>
-                <div className="list-books-title">
-                    <h1>MyReads</h1>
                 </div>
                 <div className="list-books-content">
                     {this.renderLoader(loading, showingBooks, updateShelf)}               
                 </div>
                 <div className="open-search">
-                  <Link to="/search">Add a book</Link>
+                  <Link to="/create">Add a book</Link>
                 </div>
             </div>  
         )

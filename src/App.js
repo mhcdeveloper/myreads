@@ -6,6 +6,7 @@ import { graphql, compose } from 'react-apollo';
 import gql from 'graphql-tag';
 
 import ListBooks from './components/ListBooks';
+import CreateBook from './components/CreateBook';
 
 class BooksApp extends Component {
   constructor(props) {
@@ -19,6 +20,7 @@ class BooksApp extends Component {
     this.updateShelf = this.updateShelf.bind(this); 
   }
 
+  //Metodo responsável por receber os books retornado do GraphQl
   componentWillReceiveProps(nextProps) {
     const data = nextProps.data;
     this.setState({ 
@@ -29,35 +31,31 @@ class BooksApp extends Component {
     });
   }
 
-  /*/Metodo responsável por setar o shelf do book retornado da api na state shelf do select
-  componentWillMount() {
-    this.getAllBooks();
-  }
-
-  //Metodo responsável por buscar todos os books na api caso ocorra algum error na api ele seta os books setados no localStorage
-  getAllBooks = () => {
-    this.setState({ loading: true });
-    BooksAPI.getAll().then((books) => {
-      this.setState({ books });
-      this.updateLocalStorage(books);
-      console.log(books);
-    })
-    .catch(() => {
-      const bookList = window.localStorage.getItem('myReadsBooks') || '[]';
-      this.setState({ books: JSON.parse(bookList) });
-    });
-  }
-  */
   //Metodo responsável por setar os books no localStorage
   updateLocalStorage = (books) => {
     window.localStorage.setItem('myReadsBooks', JSON.stringify(books));
   }
-
+  
+  //Metodo responsável por criar um novo Book 
+  addBook = (data) => {
+    this.props.createBook({
+      variables: {
+        ...data
+      },
+      refetchQueries: [
+        { query: Query }
+      ]
+    }).then(res => {
+      console.log(res);
+    }).catch(err => {
+      console.log(err);
+    })
+  }
+  
   //Metodo responsável por atualizar o shelf do book
-  //O retorno do metodo update é um conjunto de array, porem dei um setState com o spread dos arrays retornados
   updateShelf = (book, shelf) => {
     this.setState({ loading: true });
-    this.props.mutate({
+    this.props.updateBook({
       variables: {
         id: book.id,
         shelf
@@ -70,21 +68,23 @@ class BooksApp extends Component {
     }).catch(err => {
       console.log(err);
     })
-    //this.setState({ loading: true });
-    //BooksAPI.update(book, shelf).then((books) => {
-    //  this.getAllBooks();
-    //})
   }
 
   render() {
     return (
       <div className="app">
-        <Route path="/" render={() => (
+        <div className="list-books-title">
+          <h1>MyReads</h1>
+        </div>
+        <Route exact path="/" render={() => (
           <ListBooks 
             books={this.state.books} 
             updateShelf={this.updateShelf}
             loading={this.state.loading} 
           />
+        )} />
+        <Route  path="/create" render={() => (
+          <CreateBook addBook={this.addBook} />
         )} />
       </div>
     )
@@ -102,7 +102,7 @@ const Query = gql`
     }
   }
 `
-const Mutation = gql`
+const UpdateBookMutation = gql`
 mutation updateBook ($id: ID!, $shelf: String) {
   updateBook(id: $id, shelf: $shelf) {
     id
@@ -110,8 +110,18 @@ mutation updateBook ($id: ID!, $shelf: String) {
   }
 }
 `
+const CreateBookMutation = gql`
+mutation createBook($authors: String!, $categories: String!, $description: String!, $imageLinks: String!, $shelf: String, $title: String) {
+  createBook(authors: $authors, categories: $categories, description: $description, imageLinks: $imageLinks, shelf: $shelf, title: $title) {
+    id
+    title
+    shelf
+  }
+}
 
+`
 export default compose(
   graphql(Query),
-  graphql(Mutation)
+  graphql(UpdateBookMutation, { name: 'updateBook' }),
+  graphql(CreateBookMutation, { name: 'createBook' })
 )(BooksApp);

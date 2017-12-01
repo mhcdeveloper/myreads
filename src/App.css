@@ -56,7 +56,7 @@ h2 {
   height: 50px;
   border-radius: 50%;
   background: #1976D2;
-  background-image: url('./icons/search.png');
+  background-image: url('./icons/add.svg');
   background-repeat: no-repeat;
   background-position: center;
   background-size: 28px;
@@ -180,4 +180,50 @@ h2 {
   margin-top: 200px;
   padding: 20px 0;
   text-align: center;
+}
+
+
+/*Create book*/
+.close-create-book {
+  display: block;
+  width: 60px;
+  height: 60px;
+  background-image: url('./icons/arrow-back.svg');
+  background-position: center;
+  background-repeat: no-repeat;
+  background-size: 30px;
+  font-size: 0;
+}
+
+.create-book-form {
+  padding: 20px;
+  max-width: 500px;
+  margin: 0 auto;
+  display: flex;
+}
+
+.create-book-details {
+  margin-left: 20px;
+}
+
+.create-book-details input {
+  width: 100%;
+  padding: 5px 10px;
+  margin-bottom: 10px;
+  font-size: inherit;
+  background: transparent;
+  border: none;
+  border-bottom: 1px solid #ccc;
+  outline: 0;
+}
+
+
+.create-book-details button {
+  margin-top: 20px;
+  background: #ccc;
+  padding: 10px;
+  text-transform: uppercase;
+  font-size: inherit;
+  border: none;
+  outline: 0;
 }

@@ -4,6 +4,7 @@
     "enzyme": "^3.2.0",
     "enzyme-adapter-react-16": "^1.1.0",
     "escape-string-regexp": "^1.0.5",
+    "form-serialize": "^0.7.2",
     "halogen": "^0.2.0",
     "prop-types": "^15.6.0",
     "react": "^15.5.4",
