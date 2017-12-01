@@ -1,11 +1,13 @@
 {
   "dependencies": {
+    "apollo-client": "^1.9.2",
     "enzyme": "^3.2.0",
     "enzyme-adapter-react-16": "^1.1.0",
     "escape-string-regexp": "^1.0.5",
     "halogen": "^0.2.0",
     "prop-types": "^15.6.0",
     "react": "^15.5.4",
+    "react-apollo": "^1.4.15",
     "react-dom": "^15.5.4",
     "react-router-dom": "^4.2.2",
     "sort-by": "^1.2.0"
