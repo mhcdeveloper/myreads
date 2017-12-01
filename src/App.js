@@ -1,9 +1,10 @@
 import React, { Component } from 'react';
-//import * as BooksAPI from './BooksAPI';
 import './App.css';
 import { Route } from 'react-router-dom';
 import { graphql, compose } from 'react-apollo';
 import gql from 'graphql-tag';
+
+import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider';
 
 import ListBooks from './components/ListBooks';
 import CreateBook from './components/CreateBook';
@@ -14,7 +15,9 @@ class BooksApp extends Component {
 
     this.state = {
       books: [],
-      loading: true
+      loading: true,
+      fields: {},
+      openDialog: false
     };
 
     this.updateShelf = this.updateShelf.bind(this); 
@@ -46,10 +49,14 @@ class BooksApp extends Component {
         { query: Query }
       ]
     }).then(res => {
-      console.log(res);
+      this.setState({
+        loading: false,
+        openDialog: true
+      })
     }).catch(err => {
       console.log(err);
     })
+
   }
   
   //Metodo responsável por atualizar o shelf do book
@@ -70,23 +77,41 @@ class BooksApp extends Component {
     })
   }
 
+  //Metodo responsável por atualizar as mudanças nos campos do formulário
+  onChange = (updatedValue) => {
+    this.setState({
+      fields: {
+        ...this.state.fields,
+        ...updatedValue
+      }
+    });
+  }
+
   render() {
+    const { books, loading, openDialog } = this.state;
     return (
-      <div className="app">
-        <div className="list-books-title">
-          <h1>MyReads</h1>
+      <MuiThemeProvider>
+        <div className="app">
+          <div className="list-books-title">
+            <h1>MyReads</h1>
+          </div>
+          <Route exact path="/" render={() => (
+            <ListBooks 
+              books={books} 
+              updateShelf={this.updateShelf}
+              loading={loading} 
+            />
+          )} />
+          <Route  path="/create" render={() => (
+            <CreateBook 
+              addBook={this.addBook} 
+              onChange={fields => this.onChange(fields)}
+              openDialog={openDialog}
+              loading={loading}
+            />
+          )} />
         </div>
-        <Route exact path="/" render={() => (
-          <ListBooks 
-            books={this.state.books} 
-            updateShelf={this.updateShelf}
-            loading={this.state.loading} 
-          />
-        )} />
-        <Route  path="/create" render={() => (
-          <CreateBook addBook={this.addBook} />
-        )} />
-      </div>
+      </MuiThemeProvider>
     )
   }
 }
@@ -111,11 +136,23 @@ mutation updateBook ($id: ID!, $shelf: String) {
 }
 `
 const CreateBookMutation = gql`
-mutation createBook($authors: String!, $categories: String!, $description: String!, $imageLinks: String!, $shelf: String, $title: String) {
-  createBook(authors: $authors, categories: $categories, description: $description, imageLinks: $imageLinks, shelf: $shelf, title: $title) {
-    id
-    title
-    shelf
+mutation createBook(
+            $authors: String!, 
+            $categories: String!, 
+            $description: String!, 
+            $imageLinks: String!, 
+            $shelf: String, 
+            $title: String) {
+  createBook(
+    authors: $authors, 
+    categories: $categories, 
+    description: $description, 
+    imageLinks: $imageLinks, 
+    shelf: $shelf, 
+    title: $title) {
+      id
+      title
+      shelf
   }
 }
 

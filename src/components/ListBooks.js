@@ -2,7 +2,8 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import escapeRegExp from 'escape-string-regexp';
 import { Route, Link } from 'react-router-dom';
-import Loader from 'halogen/PulseLoader'
+
+import CircularProgress from 'material-ui/CircularProgress';
 
 import Book from '../shared/Book';
 import SearchBook from './SearchBook';
@@ -36,7 +37,10 @@ class ListBooks extends Component {
         if (loading) {
             return (
                 <div className="loading">
-                    <Loader color="#1976D2" size="16px" margin="4px"/>
+                    <CircularProgress
+                        size={100}
+                        thickness={20} 
+                    />
                 </div>
             );
         } else {
