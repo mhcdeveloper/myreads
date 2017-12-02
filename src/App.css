@@ -67,7 +67,6 @@ h2 {
 /* search page */
 
 .search-books-bar {
-  position: fixed;
   width: 100%;
   top: 100;
   left: 0;
@@ -236,4 +235,19 @@ h2 {
 
 .create-text-label {
   color: white;
+}
+
+.add-contact {
+  display: block;
+  width: 73px;
+  background:rgb(243, 6, 85);
+  background-image: url('./icons/add.svg');
+  background-repeat: no-repeat;
+  background-position: center;
+  background-size: 28px;
+  font-size: 0;
+}
+
+.loading-create {
+  text-align: center;
 }

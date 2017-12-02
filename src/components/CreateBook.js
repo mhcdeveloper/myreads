@@ -20,7 +20,8 @@ class CreateBook extends Component {
             imageLinks: '', 
             shelf: '', 
             title: '',
-            open: false
+            open: false,
+            loading: ''
         }
     }
 
@@ -47,33 +48,25 @@ class CreateBook extends Component {
     createBook = () => {
         if (this.props.addBook) {
             this.props.addBook(this.state);
+            this.setState({ loading: true });
         }
     }
-
-    renderLoadingDialog = () => {
-        console.log(this.props.openDialog);
-        if(this.props.loading === true) {
-            return (
-                <CircularProgress
-                    size={100}
-                    thickness={20} 
-                />
-            )
-        } else if(this.props.openDialog === true) {
-            return (
-                <DialogSuccess />
-            )
-        }
-    } 
     
-    render() {
+    //Metodo responsável por renderizar o circularProgress ou o formulario de create
+    renderLoadingOrForm = () => {
         const { authors, categories, description, imageLinks, shelf, title, open } = this.state;
-        return (
-            <div>
-                <Link className='close-create-book' to='/'>Close</Link>
-                <div className="labelCreate">
-                    <h2>Create Book</h2>
+        
+        if(this.state.loading === true) {
+            return (
+                <div className="loading-create">
+                    <CircularProgress
+                        size={100}
+                        thickness={20} 
+                    />
                 </div>
+            )
+        } else {
+            return (
                 <form className='create-book-form'>
                     <div className='create-book-details'>
                         <TextField
@@ -132,6 +125,21 @@ class CreateBook extends Component {
                         <RaisedButton label="Add Book" secondary onClick={e => this.createBook()}  />
                     </div>
                 </form>
+            )
+        }
+    }
+
+    render() {
+        const { open } = this.state;
+        return (
+            <div>
+                <Link className='close-create-book' to='/'>Close</Link>
+                <div className="labelCreate">
+                    <h2>Create Book</h2>
+                </div>
+                <div>
+                    {this.renderLoadingOrForm()}
+                </div>
                 <div className="loading">
                     <DialogSuccess open={open} />
                 </div>

@@ -91,15 +91,10 @@ class ListBooks extends Component {
         return (
             <div className="list-books">
                 <div className="search-books">
-                    <Route path="/search" render={() => (
-                        <SearchBook query={query} updateQuery={this.updateQuery} />
-                    )} />
+                    <SearchBook query={query} updateQuery={this.updateQuery} />
                 </div>
                 <div className="list-books-content">
                     {this.renderLoader(loading, showingBooks, updateShelf, deleteBook)}               
-                </div>
-                <div className="open-search">
-                  <Link to="/create">Add a book</Link>
                 </div>
             </div>  
         )

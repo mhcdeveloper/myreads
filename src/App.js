@@ -33,7 +33,7 @@ class BooksApp extends Component {
       this.updateLocalStorage(data.allBooks);   
     });
   }
-
+  
   //Metodo responsável por setar os books no localStorage
   updateLocalStorage = (books) => {
     window.localStorage.setItem('myReadsBooks', JSON.stringify(books));
@@ -119,7 +119,7 @@ class BooksApp extends Component {
               loading={loading} 
             />
           )} />
-          <Route  path="/create" render={() => (
+          <Route exact path="/create" render={() => (
             <CreateBook 
               addBook={this.addBook} 
               onChange={fields => this.onChange(fields)}
