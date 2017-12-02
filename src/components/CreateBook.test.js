@@ -1,9 +1,9 @@
 import React from 'react';
 import { shallow, mount } from 'enzyme';
-import SearchBook from './SearchBook';
+import CreateBook from './CreateBook';
 
-describe('<SearchBook />', () => {
+describe('<CreateBook />', () => {
     it('shallow renders without crashing', () => {
-        expect(shallow(<SearchBook />))
+        expect(shallow(<CreateBook />))
     })
 })
