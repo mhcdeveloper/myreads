@@ -149,7 +149,7 @@ h2 {
   width: 40px;
   height: 40px;
   border-radius: 50%;
-  background: #2196F3;
+  background: rgb(243, 6, 85);
   background-image: url('./icons/arrow-drop-down.svg');
   background-repeat: no-repeat;
   background-position: center;
@@ -184,6 +184,11 @@ h2 {
 
 
 /*Create book*/
+
+.labelCreate {
+  text-align: center;
+}
+
 .close-create-book {
   display: block;
   width: 60px;
@@ -200,10 +205,11 @@ h2 {
   max-width: 500px;
   margin: 0 auto;
   display: flex;
+  background: #2196F3;
 }
 
 .create-book-details {
-  margin-left: 20px;
+  margin: 0 auto;
 }
 
 .create-book-details input {
@@ -226,4 +232,8 @@ h2 {
   font-size: inherit;
   border: none;
   outline: 0;
+}
+
+.create-text-label {
+  color: white;
 }

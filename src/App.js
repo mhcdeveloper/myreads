@@ -77,6 +77,22 @@ class BooksApp extends Component {
     })
   }
 
+  deleteBook = (book, target) => {
+    this.setState({ loading: true });
+    this.props.deleteBook({
+      variables: {
+        id: book.id
+      },
+      refetchQueries: [
+        {query: Query}
+      ]
+    }).then(res => {
+      this.setState({ loading: false });
+    }).catch(err => {
+      console.log(err);
+    })
+  }
+
   //Metodo responsável por atualizar as mudanças nos campos do formulário
   onChange = (updatedValue) => {
     this.setState({
@@ -99,6 +115,7 @@ class BooksApp extends Component {
             <ListBooks 
               books={books} 
               updateShelf={this.updateShelf}
+              deleteBook={this.deleteBook}
               loading={loading} 
             />
           )} />
@@ -155,10 +172,17 @@ mutation createBook(
       shelf
   }
 }
-
+`
+const DeleteBookMutation = gql`
+mutation deleteBook ($id: ID!) {
+  deleteBook(id: $id) {
+    id
+  }
+}
 `
 export default compose(
   graphql(Query),
   graphql(UpdateBookMutation, { name: 'updateBook' }),
-  graphql(CreateBookMutation, { name: 'createBook' })
+  graphql(CreateBookMutation, { name: 'createBook' }),
+  graphql(DeleteBookMutation, { name: 'deleteBook' })
 )(BooksApp);

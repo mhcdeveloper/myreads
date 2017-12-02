@@ -47,20 +47,7 @@ class CreateBook extends Component {
     createBook = () => {
         if (this.props.addBook) {
             this.props.addBook(this.state);
-            this.clearBook();
         }
-    }
-
-    //Metodo que limpa os fields do book
-    clearBook = () => {
-        this.setState({
-            authors: '',
-            categories: '', 
-            description: '', 
-            imageLinks: '', 
-            shelf: '', 
-            title: '',
-         })
     }
 
     renderLoadingDialog = () => {
@@ -84,6 +71,9 @@ class CreateBook extends Component {
         return (
             <div>
                 <Link className='close-create-book' to='/'>Close</Link>
+                <div className="labelCreate">
+                    <h2>Create Book</h2>
+                </div>
                 <form className='create-book-form'>
                     <div className='create-book-details'>
                         <TextField
@@ -100,7 +90,6 @@ class CreateBook extends Component {
                             floatingLabelText="Description"
                             value={description}
                             onChange={e => this.change(e)}
-                            floatingLabelFixed
                             multiLine={true}
                             rows={3}
                         />
@@ -111,7 +100,6 @@ class CreateBook extends Component {
                             floatingLabelText="Categories"
                             value={categories}
                             onChange={e => this.change(e)}
-                            floatingLabelFixed
                         />
                         <br />
                         <TextField
@@ -120,7 +108,6 @@ class CreateBook extends Component {
                             floatingLabelText="Image Links"
                             value={imageLinks}
                             onChange={e => this.change(e)}
-                            floatingLabelFixed
                         />
                         <br />
                         <SelectField
@@ -140,10 +127,9 @@ class CreateBook extends Component {
                             floatingLabelText="Authors"
                             value={authors}
                             onChange={e => this.change(e)}
-                            floatingLabelFixed
                         />
                         <br />
-                        <RaisedButton label="Add Book" primary onClick={e => this.createBook()}  />
+                        <RaisedButton label="Add Book" secondary onClick={e => this.createBook()}  />
                     </div>
                 </form>
                 <div className="loading">

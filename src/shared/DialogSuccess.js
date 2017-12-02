@@ -5,14 +5,6 @@ import Dialog from 'material-ui/Dialog';
 import FlatButton from 'material-ui/FlatButton';
 
 class DialogSuccess extends Component {
-    constructor(props) {
-        super(props);
-
-        this.state = {
-            open: true
-        }
-    }
-
     render() {
         const { open } = this.props;
         const actions = [
@@ -31,7 +23,7 @@ class DialogSuccess extends Component {
                     modal={true}
                     open={open}
                 >
-                    Only Teste
+                    O livro foi cadastrado com sucesso!! Clique no botão e retornará para lista dos livros!!
                 </Dialog>
             </div>
         )

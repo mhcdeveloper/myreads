@@ -33,7 +33,7 @@ class ListBooks extends Component {
     }
 
     //Metodo responsável por renderizar o loading ou a lista de books
-    renderLoader = (loading, showingBooks, updateShelf) => {
+    renderLoader = (loading, showingBooks, updateShelf, deleteBook) => {
         if (loading) {
             return (
                 <div className="loading">
@@ -54,7 +54,11 @@ class ListBooks extends Component {
                                     {showingBooks.filter(book => book.shelf.toLowerCase() === {shelf}.shelf.replace( /\s/g, '' ).toLowerCase())
                                         .map((book) =>
                                             <li key={book.id}>
-                                                <Book book={book} updateShelf={updateShelf} />
+                                                <Book 
+                                                    book={book} 
+                                                    updateShelf={updateShelf}
+                                                    deleteBook={deleteBook} 
+                                                />
                                             </li>
                                         )}
                                 </ol>
@@ -72,7 +76,7 @@ class ListBooks extends Component {
     }
     
     render() {
-        const { books, updateShelf, loading } = this.props; 
+        const { books, updateShelf, loading, deleteBook } = this.props; 
         const { query } = this.state;
 
         let showingBooks;
@@ -92,7 +96,7 @@ class ListBooks extends Component {
                     )} />
                 </div>
                 <div className="list-books-content">
-                    {this.renderLoader(loading, showingBooks, updateShelf)}               
+                    {this.renderLoader(loading, showingBooks, updateShelf, deleteBook)}               
                 </div>
                 <div className="open-search">
                   <Link to="/create">Add a book</Link>

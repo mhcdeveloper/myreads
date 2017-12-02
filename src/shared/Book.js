@@ -18,8 +18,13 @@ class Book extends Component {
     //Metodo responsável por atualizar o book e seu respectivo shelf selecionado no menu.
     handleChange(event) {
         const shelf = event.target.value;
-        this.props.updateShelf(this.props.book, shelf);
-        this.setState({ shelf });
+        //Caso o shelf selecionado seja none ele chama o metodo deleteBook
+        if(shelf === 'none') {
+            this.props.deleteBook(this.props.book);
+        } else {
+            this.props.updateShelf(this.props.book, shelf);
+            this.setState({ shelf });            
+        }
     }
 
     render() {
