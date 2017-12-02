@@ -1,39 +1,23 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
-import escapeRegExp from 'escape-string-regexp';
-import { Route, Link } from 'react-router-dom';
+import { Link } from 'react-router-dom';
 
 import CircularProgress from 'material-ui/CircularProgress';
 
-import Book from '../shared/Book';
-import SearchBook from './SearchBook';
+import List from '../shared/List';
 
 class ListBooks extends Component {
     constructor(props) {
         super(props);
 
         this.state = {
-            shelf: [
-                "Currently Reading",
-                "Want To Read",
-                "Read"
-            ],
             query: ''
         }
     }
 
-    //Metodo responsavel por atualizar a query do filtro
-    updateQuery = (query) => {
-        this.setState({ query: query.trim() });
-    }
-
-    //Metodo responsavel por limpar a query do filtro
-    clearQuery = () => {
-        this.setState({ query: '' });
-    }
-
     //Metodo responsável por renderizar o loading ou a lista de books
-    renderLoader = (loading, showingBooks, updateShelf, deleteBook) => {
+    renderLoader = (loading, updateShelf, deleteBook) => {
+        const { books, shelf } = this.props;
         if (loading) {
             return (
                 <div className="loading">
@@ -46,25 +30,12 @@ class ListBooks extends Component {
         } else {
             return (
                 <div>
-                    {this.state.shelf.map(shelf => (
-                        <div className="bookshelf" key={shelf}>
-                            <h2 className="bookshelf-title">{shelf}</h2>
-                            <div className="bookshelf-books">
-                                <ol className="books-grid">
-                                    {showingBooks.filter(book => book.shelf.toLowerCase() === {shelf}.shelf.replace( /\s/g, '' ).toLowerCase())
-                                        .map((book) =>
-                                            <li key={book.id}>
-                                                <Book 
-                                                    book={book} 
-                                                    updateShelf={updateShelf}
-                                                    deleteBook={deleteBook} 
-                                                />
-                                            </li>
-                                        )}
-                                </ol>
-                            </div>
-                        </div> 
-                    ))}
+                    <List 
+                        books={books} 
+                        updateShelf={updateShelf} 
+                        deleteBook={deleteBook}
+                        shelf={shelf} 
+                    />
                 </div>
             );
         }
@@ -72,29 +43,20 @@ class ListBooks extends Component {
 
     static propTypes = {
         books: PropTypes.array.isRequired,
-        updateShelf: PropTypes.func.isRequired
+        updateShelf: PropTypes.func.isRequired,
+        deleteBook: PropTypes.func.isRequired
     }
     
     render() {
-        const { books, updateShelf, loading, deleteBook } = this.props; 
-        const { query } = this.state;
-
-        let showingBooks;
-
-        if (query) {
-            const match = new RegExp(escapeRegExp(query), 'i');
-            showingBooks = books.filter((book) => match.test(book.authors));
-        } else {
-            showingBooks = books;
-        }
-
+        const { updateShelf, loading, deleteBook } = this.props; 
         return (
             <div className="list-books">
-                <div className="search-books">
-                    <SearchBook query={query} updateQuery={this.updateQuery} />
-                </div>
                 <div className="list-books-content">
-                    {this.renderLoader(loading, showingBooks, updateShelf, deleteBook)}               
+                    {this.renderLoader(loading, updateShelf, deleteBook)}               
+                </div>
+                
+                <div className="open-search">
+                    <Link to="/search">Search a book</Link>
                 </div>
             </div>  
         )

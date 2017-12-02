@@ -34,7 +34,7 @@ class CreateBook extends Component {
     }
 
     //Metodo responsável por capiturar as mudanças dos valores nos campos
-    change = (e) => {
+    changeField = (e) => {
         this.props.onChange({ [e.target.name]: e.target.value });
         this.setState({
             [e.target.name]: e.target.value
@@ -54,9 +54,9 @@ class CreateBook extends Component {
     
     //Metodo responsável por renderizar o circularProgress ou o formulario de create
     renderLoadingOrForm = () => {
-        const { authors, categories, description, imageLinks, shelf, title, open } = this.state;
+        const { loading, authors, categories, description, imageLinks, shelf, title } = this.state;
         
-        if(this.state.loading === true) {
+        if(loading === true) {
             return (
                 <div className="loading-create">
                     <CircularProgress
@@ -74,7 +74,7 @@ class CreateBook extends Component {
                             hintText="Title"
                             floatingLabelText="Title"
                             value={title}
-                            onChange={e => this.change(e)}
+                            onChange={e => this.changeField(e)}
                         />
                         <br />
                         <TextField
@@ -82,7 +82,7 @@ class CreateBook extends Component {
                             hintText="Description"
                             floatingLabelText="Description"
                             value={description}
-                            onChange={e => this.change(e)}
+                            onChange={e => this.changeField(e)}
                             multiLine={true}
                             rows={3}
                         />
@@ -92,7 +92,7 @@ class CreateBook extends Component {
                             hintText="Categories"
                             floatingLabelText="Categories"
                             value={categories}
-                            onChange={e => this.change(e)}
+                            onChange={e => this.changeField(e)}
                         />
                         <br />
                         <TextField
@@ -100,7 +100,7 @@ class CreateBook extends Component {
                             hintText="Image Links"
                             floatingLabelText="Image Links"
                             value={imageLinks}
-                            onChange={e => this.change(e)}
+                            onChange={e => this.changeField(e)}
                         />
                         <br />
                         <SelectField
@@ -119,7 +119,7 @@ class CreateBook extends Component {
                             hintText="Authors"
                             floatingLabelText="Authors"
                             value={authors}
-                            onChange={e => this.change(e)}
+                            onChange={e => this.changeField(e)}
                         />
                         <br />
                         <RaisedButton label="Add Book" secondary onClick={e => this.createBook()}  />

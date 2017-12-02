@@ -8,6 +8,7 @@ import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider';
 
 import ListBooks from './components/ListBooks';
 import CreateBook from './components/CreateBook';
+import SearchBook from './components/SearchBook';
 
 class BooksApp extends Component {
   constructor(props) {
@@ -17,10 +18,13 @@ class BooksApp extends Component {
       books: [],
       loading: true,
       fields: {},
-      openDialog: false
+      openDialog: false,
+      shelf: [
+        "Currently Reading",
+        "Want To Read",
+        "Read"
+      ]
     };
-
-    this.updateShelf = this.updateShelf.bind(this); 
   }
 
   //Metodo responsável por receber os books retornado do GraphQl
@@ -94,7 +98,7 @@ class BooksApp extends Component {
   }
 
   //Metodo responsável por atualizar as mudanças nos campos do formulário
-  onChange = (updatedValue) => {
+  onChangeField = (updatedValue) => {
     this.setState({
       fields: {
         ...this.state.fields,
@@ -104,7 +108,7 @@ class BooksApp extends Component {
   }
 
   render() {
-    const { books, loading, openDialog } = this.state;
+    const { books, loading, openDialog, shelf } = this.state;
     return (
       <MuiThemeProvider>
         <div className="app">
@@ -116,13 +120,23 @@ class BooksApp extends Component {
               books={books} 
               updateShelf={this.updateShelf}
               deleteBook={this.deleteBook}
-              loading={loading} 
+              loading={loading}
+              shelf={shelf} 
             />
+          )} />
+          <Route exact path="/search" render={() => (
+              <SearchBook 
+                books={books}
+                updateShelf={this.updateShelf}
+                deleteBook={this.deleteBook}
+                loading={loading}
+                shelf={shelf} 
+              />
           )} />
           <Route exact path="/create" render={() => (
             <CreateBook 
               addBook={this.addBook} 
-              onChange={fields => this.onChange(fields)}
+              onChange={fields => this.onChangeField(fields)}
               openDialog={openDialog}
               loading={loading}
             />
