@@ -62,7 +62,7 @@ class CreateBook extends Component {
                     <CircularProgress
                         size={100}
                         thickness={20} 
-                    />
+                        />
                 </div>
             )
         } else {
@@ -75,7 +75,7 @@ class CreateBook extends Component {
                             floatingLabelText="Title"
                             value={title}
                             onChange={e => this.changeField(e)}
-                        />
+                            />
                         <br />
                         <TextField
                             name="description"
@@ -85,7 +85,7 @@ class CreateBook extends Component {
                             onChange={e => this.changeField(e)}
                             multiLine={true}
                             rows={3}
-                        />
+                            />
                         <br />
                         <TextField
                             name="categories"
@@ -108,7 +108,7 @@ class CreateBook extends Component {
                             floatingLabelText="Shelf"
                             value={shelf}
                             onChange={this.updateSelectField}
-                        >
+                            >
                             <MenuItem value={'currentlyReading'} primaryText="Currently Reading" />
                             <MenuItem value={'wantToRead'} primaryText="Want to Read" />
                             <MenuItem value={'read'} primaryText="Read" />
@@ -120,7 +120,7 @@ class CreateBook extends Component {
                             floatingLabelText="Authors"
                             value={authors}
                             onChange={e => this.changeField(e)}
-                        />
+                            />
                         <br />
                         <RaisedButton label="Add Book" secondary onClick={e => this.createBook()}  />
                     </div>
@@ -128,8 +128,9 @@ class CreateBook extends Component {
             )
         }
     }
-
+    
     render() {
+        const { titleDialog } = this.props;
         const { open } = this.state;
         return (
             <div>
@@ -141,7 +142,10 @@ class CreateBook extends Component {
                     {this.renderLoadingOrForm()}
                 </div>
                 <div className="loading">
-                    <DialogSuccess open={open} />
+                    <DialogSuccess 
+                        open={open}
+                        title={titleDialog} 
+                    />
                 </div>
             </div>
         )

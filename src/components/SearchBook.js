@@ -1,20 +1,42 @@
 import React, { Component } from 'react';
 import { Link } from 'react-router-dom';
-import escapeRegExp from 'escape-string-regexp';
 import PropTypes from 'prop-types';
 
-import List from '../shared/List';
+import * as BooksAPI from '../BooksAPI';
+import BookSearch from '../shared/BookSearch';
+import DialogSuccess from '../shared/DialogSuccess';
 
 class SearchBook extends Component {
     constructor(props) {
         super(props);
 
-        this.state = ({ query: '' });
+        this.state = ({ 
+            query: '',
+            books: [],
+            open: false,
+            title: ''
+        });
     }
     
+    componentWillReceiveProps() {
+        if(this.props.open === true) {
+            this.setState({ 
+                open: true, 
+                title: this.props.title 
+            });
+        }
+    }
+
     //Metodo responsavel por atualizar a query do filtro
     updateQuery = (query) => {
-        this.setState({ query: query.trim() });
+        this.setState({ query });
+        this.searchBook(query, 10);
+    }
+
+    //Metodo responsável por buscar o book no bookApi
+    searchBook = (query, maxResults) => {
+        BooksAPI.search(query, maxResults)
+            .then((books) => this.setState({ books }));
     }
 
     //Metodo responsavel por limpar a query do filtro
@@ -22,25 +44,48 @@ class SearchBook extends Component {
         this.setState({ query: '' });
     }
 
+    //Metodo responsável por verificar se o book selecioando existem na prateleira caso não exista
+    //ele inseri no servidor graphQl na prateleira
+    verificarBook= (book) => {
+        const books = this.props.books;
+        let bookExistente = ''
+        for(const bookFilter of books) {
+            if(bookFilter.title === book.title) {
+                bookExistente = book;
+            }
+        }
+        
+        if(bookExistente) {
+            this.setState({ 
+                open: true, 
+                title: 'Há um livro com esse titulo na prateleira',
+            });
+        } else {
+            let categories = '';
+            if(book.categories[0] === null) {
+                categories = 'Sem categoria';
+            } else {
+                categories = book.categories[0];
+            }
+            const bookSelected = {
+                authors: book.authors[0],
+                categories: categories, 
+                description: book.description, 
+                imageLinks: book.imageLinks.smallThumbnail, 
+                title: book.title,
+                shelf: 'wantToRead'
+            };             
+            this.props.createBook(bookSelected);
+        }
+    }
+
     static propTypes = {
         books: PropTypes.array.isRequired,
-        updateShelf: PropTypes.func.isRequired,
-        deleteBook: PropTypes.func.isRequired
+        createBook: PropTypes.func.isRequired
     }
 
     render() {
-        const { books, updateShelf, deleteBook, shelf } = this.props;
-        const { query } = this.state;
-        
-        let showingBooks;
-
-        if (query) {
-            const match = new RegExp(escapeRegExp(query), 'i');
-            showingBooks = books.filter((book) => match.test(book.authors));
-        } else {
-            showingBooks = books;
-        }
-        
+        const { books, query, open, title} = this.state;
         return (
             <div className="search-books">
                 <div className="search-books-bar">
@@ -51,15 +96,22 @@ class SearchBook extends Component {
                     <Link to='/create' className='add-contact'>Add Contact</Link>
                 </div>
                 <div className="search-books-results">
+            {this.state.open}
                     <ol className="books-grid">
+                        { books.map(book => {
+                            return (
+                                <BookSearch
+                                    key={book.id} 
+                                    book={book}
+                                    createBook={this.verificarBook} />
+                            )
+                        }) }
                     </ol>
                 </div>
                 <div>
-                    <List 
-                        books={showingBooks} 
-                        updateShelf={updateShelf}
-                        deleteBook={deleteBook}
-                        shelf={shelf}
+                    <DialogSuccess 
+                        open={open} 
+                        title={title}
                     />
                 </div>
             </div>

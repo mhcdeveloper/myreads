@@ -12,15 +12,15 @@ const actions = [
         />
     </Link>
 ];
-const DialogSuccess = ({ open }) => (
+const DialogSuccess = ({ open, title }) => (
     <div>
        <Dialog
             actions={actions}
-            title="Cadastro efetuado com sucesso!"
+            title="My Reads"
             modal={true}
             open={open}
         >
-        O livro foi cadastrado com sucesso!! Clique no botão e retornará para lista dos livros!!
+        {title}
         </Dialog>
     </div>
 )

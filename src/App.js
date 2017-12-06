@@ -19,6 +19,7 @@ class BooksApp extends Component {
       loading: true,
       fields: {},
       openDialog: false,
+      titleDialog: '',
       shelf: [
         "Currently Reading",
         "Want To Read",
@@ -55,7 +56,8 @@ class BooksApp extends Component {
     }).then(res => {
       this.setState({
         loading: false,
-        openDialog: true
+        openDialog: true,
+        titleDialog: 'Cadastro efetuado com sucesso!'
       })
     }).catch(err => {
       console.log(err);
@@ -108,7 +110,7 @@ class BooksApp extends Component {
   }
 
   render() {
-    const { books, loading, openDialog, shelf } = this.state;
+    const { books, loading, openDialog, titleDialog, shelf } = this.state;
     return (
       <MuiThemeProvider>
         <div className="app">
@@ -127,10 +129,10 @@ class BooksApp extends Component {
           <Route exact path="/search" render={() => (
               <SearchBook 
                 books={books}
-                updateShelf={this.updateShelf}
-                deleteBook={this.deleteBook}
+                createBook={this.addBook}
                 loading={loading}
-                shelf={shelf} 
+                open={openDialog}
+                title={titleDialog}
               />
           )} />
           <Route exact path="/create" render={() => (
@@ -138,6 +140,7 @@ class BooksApp extends Component {
               addBook={this.addBook} 
               onChange={fields => this.onChangeField(fields)}
               openDialog={openDialog}
+              titleDialog={titleDialog}
               loading={loading}
             />
           )} />
@@ -169,7 +172,7 @@ mutation updateBook ($id: ID!, $shelf: String) {
 const CreateBookMutation = gql`
 mutation createBook(
             $authors: String!, 
-            $categories: String!, 
+            $categories: String, 
             $description: String!, 
             $imageLinks: String!, 
             $shelf: String, 
