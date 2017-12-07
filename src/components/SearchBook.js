@@ -36,7 +36,36 @@ class SearchBook extends Component {
     //Metodo responsável por buscar o book no bookApi
     searchBook = (query, maxResults) => {
         BooksAPI.search(query, maxResults)
-            .then((books) => this.setState({ books }));
+            .then((books) => this.verificarPrateleira(books) );
+    }
+
+    //Devido eu utilizar o GraphQl eu tive que apenas acrescentar um atributo shelf nos books que foram
+    //verificado na prateleira já existente, porque os id dos books retornados da BookApi são diferentes
+    //dos meus retornados do GraphQl
+    verificarPrateleira = (books) => {
+        for(const bookFilter of this.props.books) {
+            books.filter(book => book.title === bookFilter.title)
+                .map(book => {
+                    //Removo o book existente
+                    books.splice(book, 1);
+                    
+                    //Acrescento o atributo shelf com valor do book da prateleira e troco 
+                    //O id com o do servidor GraphQl pra fazer update caso ocorra
+                    let imageLinks = {smallThumbnail: book.imageLinks.smallThumbnail};
+                    let graphQlBook = { 
+                        id: bookFilter.id,
+                        shelf: bookFilter.shelf,
+                        authors: book.authors[0], 
+                        description: book.description, 
+                        imageLinks: imageLinks, 
+                        title: book.title, 
+                    };
+                    //Adiciono o book novo com os campos atualizado shelf e id
+                    books.push(graphQlBook);
+                    console.log(graphQlBook);
+                    this.setState({ books });
+                });   
+        }
     }
 
     //Metodo responsavel por limpar a query do filtro
@@ -44,39 +73,16 @@ class SearchBook extends Component {
         this.setState({ query: '' });
     }
 
-    //Metodo responsável por verificar se o book selecioando existem na prateleira caso não exista
-    //ele inseri no servidor graphQl na prateleira
-    verificarBook= (book) => {
-        const books = this.props.books;
-        let bookExistente = ''
-        for(const bookFilter of books) {
-            if(bookFilter.title === book.title) {
-                bookExistente = book;
-            }
-        }
-        
-        if(bookExistente) {
-            this.setState({ 
-                open: true, 
-                title: 'Há um livro com esse titulo na prateleira',
-            });
-        } else {
-            let categories = '';
-            if(book.categories[0] === null) {
-                categories = 'Sem categoria';
-            } else {
-                categories = book.categories[0];
-            }
-            const bookSelected = {
-                authors: book.authors[0],
-                categories: categories, 
-                description: book.description, 
-                imageLinks: book.imageLinks.smallThumbnail, 
-                title: book.title,
-                shelf: 'wantToRead'
-            };             
-            this.props.createBook(bookSelected);
-        }
+    //Metodo responsável por inserir o novo book no GraphQl
+    verificarBook= (book, shelf) => {
+        const bookSelected = {
+            authors: book.authors[0],
+            description: book.description, 
+            imageLinks: book.imageLinks.smallThumbnail, 
+            title: book.title,
+            shelf: shelf
+        };             
+        this.props.createBook(bookSelected);
     }
 
     static propTypes = {
@@ -85,27 +91,34 @@ class SearchBook extends Component {
     }
 
     render() {
+        const { shelf, updateShelf } = this.props;
         const { books, query, open, title} = this.state;
         return (
             <div className="search-books">
                 <div className="search-books-bar">
                     <Link className="close-search" to="/">Close</Link>
                     <div className="search-books-input-wrapper">
-                        <input type="text" placeholder="Search by title or author" value={query} onChange={(event) => this.updateQuery(event.target.value)}/>
+                        <input 
+                            type="text" 
+                            placeholder="Search by title or author" 
+                            value={query} 
+                            onChange={(event) => this.updateQuery(event.target.value)}
+                        />
                     </div>
                     <Link to='/create' className='add-contact'>Add Contact</Link>
                 </div>
                 <div className="search-books-results">
-            {this.state.open}
                     <ol className="books-grid">
-                        { books.map(book => {
-                            return (
-                                <BookSearch
-                                    key={book.id} 
-                                    book={book}
-                                    createBook={this.verificarBook} />
-                            )
-                        }) }
+                        {books.map(book => 
+                            <li key={book.id}>
+                                <BookSearch 
+                                    book={book} 
+                                    updateShelf={updateShelf} 
+                                    createBook={this.verificarBook}
+                                    shelf={shelf} 
+                                />
+                            </li>
+                        )}
                     </ol>
                 </div>
                 <div>

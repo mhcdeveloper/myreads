@@ -12,7 +12,11 @@ class Book extends Component {
     //Seta o shelf do book no state shelf.
     componentWillMount() {
         let shelfBook = this.props.book.shelf;
-        this.setState({ shelf: shelfBook });
+        if(!shelfBook) {
+            this.setState({ shelf: 'none' });
+        } else {
+            this.setState({ shelf: shelfBook })
+        }
     }
 
     //Metodo responsável por atualizar o book e seu respectivo shelf selecionado no menu.
@@ -36,7 +40,7 @@ class Book extends Component {
                     <div className="book-cover" style={{ width: 128, height: 193, backgroundImage: `url("${book.imageLinks}")` }}></div>
                         <div className="book-shelf-changer">
                             <select value={shelf} onChange={this.handleChange}>
-                                <option value="none" disabled>Move to...</option>
+                                <option value="moveTo" disabled>Move to...</option>
                                 <option value="currentlyReading">Currently Reading</option>
                                 <option value="wantToRead">Want to Read</option>
                                 <option value="read">Read</option>

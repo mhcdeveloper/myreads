@@ -130,9 +130,11 @@ class BooksApp extends Component {
               <SearchBook 
                 books={books}
                 createBook={this.addBook}
+                updateShelf={this.updateShelf}
                 loading={loading}
                 open={openDialog}
                 title={titleDialog}
+                shelf={shelf}
               />
           )} />
           <Route exact path="/create" render={() => (
