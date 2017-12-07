@@ -9,7 +9,7 @@ class BookSearch extends Component {
         this.handleChange = this.handleChange.bind(this);        
     }
 
-    //Metodo responsável por atualizar o shelf inicial de para none
+    //Metodo responsável por atualizar o shelf inicial para 'none' caso esteja vazio
     componentWillMount() {
         let shelfBook = this.props.book.shelf;
         if(!shelfBook) {

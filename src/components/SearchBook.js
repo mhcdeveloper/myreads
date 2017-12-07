@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import { Link } from 'react-router-dom';
 import PropTypes from 'prop-types';
+import { Debounce } from 'react-throttle';
 
 import * as BooksAPI from '../BooksAPI';
 import BookSearch from '../shared/BookSearch';
@@ -18,6 +19,7 @@ class SearchBook extends Component {
         });
     }
     
+    //Verifica a props.open para abrir o DialogSuccess
     componentWillReceiveProps() {
         if(this.props.open === true) {
             this.setState({ 
@@ -37,9 +39,14 @@ class SearchBook extends Component {
     searchBook = (query, maxResults) => {
         BooksAPI.search(query, maxResults)
             .then((books) => this.verificarPrateleira(books) );
+     }
+    
+    //Metodo responsavel por limpar a query do filtro
+    clearQuery = () => {
+        this.setState({ query: '' });
     }
-
-    //Devido eu utilizar o GraphQl eu tive que apenas acrescentar um atributo shelf nos books que foram
+        
+    //Devido eu utilizar o GraphQl eu tive que apenas acrescentar um atributo shelf e atualizar o id nos books que foram
     //verificado na prateleira já existente, porque os id dos books retornados da BookApi são diferentes
     //dos meus retornados do GraphQl
     verificarPrateleira = (books) => {
@@ -60,21 +67,15 @@ class SearchBook extends Component {
                         imageLinks: imageLinks, 
                         title: book.title, 
                     };
-                    //Adiciono o book novo com os campos atualizado shelf e id
+                    //Adiciono o book novo com os campos atualizados shelf e id
                     books.push(graphQlBook);
-                    console.log(graphQlBook);
                     this.setState({ books });
                 });   
         }
     }
 
-    //Metodo responsavel por limpar a query do filtro
-    clearQuery = () => {
-        this.setState({ query: '' });
-    }
-
     //Metodo responsável por inserir o novo book no GraphQl
-    verificarBook= (book, shelf) => {
+    verificarBook = (book, shelf) => {
         const bookSelected = {
             authors: book.authors[0],
             description: book.description, 
@@ -87,23 +88,25 @@ class SearchBook extends Component {
 
     static propTypes = {
         books: PropTypes.array.isRequired,
-        createBook: PropTypes.func.isRequired
+        createBook: PropTypes.func.isRequired,
+        updateShelf: PropTypes.func.isRequired
     }
 
     render() {
         const { shelf, updateShelf } = this.props;
-        const { books, query, open, title} = this.state;
+        const { books, open, title} = this.state;
         return (
             <div className="search-books">
                 <div className="search-books-bar">
                     <Link className="close-search" to="/">Close</Link>
                     <div className="search-books-input-wrapper">
-                        <input 
-                            type="text" 
-                            placeholder="Search by title or author" 
-                            value={query} 
-                            onChange={(event) => this.updateQuery(event.target.value)}
-                        />
+                        <Debounce time="400" handler="onChange">
+                            <input 
+                                type="text" 
+                                placeholder="Search by title or author" 
+                                onChange={(event) => this.updateQuery(event.target.value)}
+                            />
+                        </Debounce>
                     </div>
                     <Link to='/create' className='add-contact'>Add Contact</Link>
                 </div>

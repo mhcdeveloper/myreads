@@ -77,7 +77,11 @@ class BooksApp extends Component {
         {query: Query}
       ]
     }).then(res => {
-      this.setState({ loading: false });
+      this.setState({ 
+        loading: false,
+        openDialog: true,
+        titleDialog: 'Book atualizado com sucesso!' 
+      });
     }).catch(err => {
       console.log(err);
     })
